@@ -1,0 +1,7 @@
+langchain
+langchain-community
+langgraph
+langchain-core
+langchain-groq
+faiss-cpu
+tavily-python
