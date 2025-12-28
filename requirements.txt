@@ -5,3 +5,6 @@ langchain-core
 langchain-groq
 faiss-cpu
 tavily-python
+streamlit
+uvicorn
+
