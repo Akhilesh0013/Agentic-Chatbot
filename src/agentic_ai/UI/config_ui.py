@@ -1,7 +1,7 @@
 from configparser import ConfigParser
 
 class Config:
-    def __init__(self, config_file_path = "src/agentic-ai/UI/config-ui.ini") -> None:
+    def __init__(self, config_file_path = "src/agentic_ai/UI/config_ui.ini") -> None:
         self.config = ConfigParser()
         self.config.read(config_file_path)
 
