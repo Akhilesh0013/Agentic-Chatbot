@@ -5,6 +5,7 @@ from src.agentic_ai.Nodes.basic_chatbot_node import BasicChatbotNode
 from src.agentic_ai.Tools.search_tool import get_tools , create_tool_node
 from langgraph.prebuilt import tools_condition , ToolNode
 from src.agentic_ai.Nodes.chatbot_with_web import ToolChatbotNode
+from src.agentic_ai.Nodes.ai_news_node import AINewsNode
 
 
 class GraphBuilder:
@@ -15,7 +16,7 @@ class GraphBuilder:
     def basic_chatbot(self):
         """
         Builds a basic chatbot using LangGraph.
-        This methos initializes a chatbot node using the BasicChatbotNodeclass
+        This method initializes a chatbot node using the BasicChatbotNodeclass
         and integrates it into the graph. The chatbot node is set s both the entry
         and exit point of the graph.
         """
@@ -48,7 +49,21 @@ class GraphBuilder:
         self.graph_builder.add_edge(START, "chatbot")
         self.graph_builder.add_conditional_edges("chatbot", tools_condition)
         self.graph_builder.add_edge("tools", "chatbot")
+    
+    def ai_news_builder(self):
 
+        ai_news_node = AINewsNode(self.llm)
+         
+        # Adding nodes
+        self.graph_builder.add_node("fetch_news", ai_news_node.fetch_news)
+        self.graph_builder.add_node("summarize_news", ai_news_node.summarize_news)
+        self.graph_builder.add_node("save_result", ai_news_node.save_result)
+
+        # Adding Edges
+        self.graph_builder.add_edge(START, "fetch_news")
+        self.graph_builder.add_edge("fetch_news", "summarize_news")
+        self.graph_builder.add_edge("summarize_news", "save_result")
+        self.graph_builder.add_edge("save_result", END)
     
     def setup_graph(self, usecase):
 
@@ -57,6 +72,9 @@ class GraphBuilder:
         
         if usecase == 'Chatbot With Web' :
             self.chatbot_with_tools()
+        
+        if usecase == 'AI News Summarizer':
+            self.ai_news_builder()
             
         return self.graph_builder.compile()
 
